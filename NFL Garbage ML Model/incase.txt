@@ -1,0 +1,80 @@
+
+late_plays = fourth_quarter[
+    fourth_quarter["game_seconds_remaining"] <= 300 
+]
+
+print("Last 5 Minutes")
+print(late_plays[columns].to_string(index=False)) # Now I want to see all the recorded plays from the final 5 minutes.
+
+
+late_plays = late_plays.copy()
+
+late_plays["score_difference"] = abs(          
+    late_plays["total_home_score"] - late_plays["total_away_score"])  # creating a column for the difference and getting its absolute value 
+
+
+print("Score Differences")
+print(late_plays[[
+    "game_seconds_remaining",
+    "total_home_score",
+    "total_away_score",
+    "score_difference"
+]].to_string(index=False))
+
+
+#---------------------#
+# HYPOTHETICAL CASE #
+
+
+garbage_time = late_plays[
+    late_plays["score_difference"] >= 14
+]
+
+print("Garbage Time Situations")
+print(garbage_time[[
+    "game_seconds_remaining",
+    "posteam",
+    "total_home_score",
+    "total_away_score",
+    "score_difference"
+]].to_string(index=False))
+
+
+# Perfect. Time to find garbage-time situations across ALL NFL games.
+
+all_late_plays = df[ # let's go through all the dataset
+    (df["qtr"] == 4) & # quarter must be 4
+    (df["game_seconds_remaining"] <= 300) & # the last 5 minutes
+    (df["game_seconds_remaining"] >= 0) # there must be more than 0 seconds remaining
+].copy()
+
+
+all_late_plays["score_difference"] = abs(
+    all_late_plays["total_home_score"] - all_late_plays["total_away_score"] # calculating difference
+)
+
+
+all_garbage_time = all_late_plays[
+    all_late_plays["score_difference"] >= 14 # the difference must be greater than 14 
+]
+
+print("All NFL Garbage-Time Situations")
+
+print("Number of plays:", len(all_garbage_time)) # counting number of plays for all
+
+print(
+    "Number of games:", all_garbage_time["game_id"].nunique()
+)
+
+
+# Let's see some examples
+print(all_garbage_time[[
+    "game_id",
+    "game_seconds_remaining",
+    "home_team",
+    "away_team",
+    "total_home_score",
+    "total_away_score",
+    "score_difference"
+]].head(15).to_string(index=False))
+

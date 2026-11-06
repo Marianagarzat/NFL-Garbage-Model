@@ -1,0 +1,7 @@
+# This is the list of what I'll need:
+
+nflreadpy
+pandas
+pyarrow
+numpy
+sickit-learn
